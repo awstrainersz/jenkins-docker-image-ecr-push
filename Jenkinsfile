@@ -25,7 +25,7 @@ pipeline {
                 checkout scmGit(
                     branches: [[name: '*/master']],
                     userRemoteConfigs: [[
-                        credentialsId: 'toshallab',
+                        credentialsId: 'ecr-push',
                         url: 'https://github.com/awstrainersz/jenkins-docker-image-ecr-push.git'
                     ]]
                 )     
