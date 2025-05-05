@@ -26,7 +26,7 @@ pipeline {
                     branches: [[name: '*/master']],
                     userRemoteConfigs: [[
                         credentialsId: 'toshallab',
-                        url: 'https://github.com/toshallab/demoecr2.git'
+                        url: 'https://github.com/awstrainersz/jenkins-docker-image-ecr-push.git'
                     ]]
                 )     
             }
