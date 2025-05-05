@@ -1,10 +1,5 @@
-FROM nginx:latest
+# Use a lightweight base image
+FROM alpine:latest
 
-# Remove the default site config if you want to fully replace it
-RUN rm /etc/nginx/conf.d/default.conf
-
-# Copy website content
-COPY content/ /usr/share/nginx/html/
-
-# Copy custom nginx configuration files
-COPY conf/ /etc/nginx/
+# Set the command to print "Hello, World!"
+CMD ["echo", "Hello, World!"]
