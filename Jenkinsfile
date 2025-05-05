@@ -16,7 +16,7 @@ pipeline {
                     branches: [[name: '*/main']],  // Changed from master to main (GitHub default)
                     extensions: [], 
                     userRemoteConfigs: [[
-                        credentialsId: 'c5120fba-87ec-4a04-9117-6fc76d24f4f6', 
+                        credentialsId: 'gittoken', 
                         url: 'https://github.com/awstrainersz/jenkins-docker-image-ecr-push.git'
                     ]]
                 ])     
