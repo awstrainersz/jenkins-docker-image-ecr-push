@@ -3,26 +3,12 @@ pipeline {
     environment {
         AWS_ACCOUNT_ID = "390403874276"
         AWS_DEFAULT_REGION = "us-east-1" 
-        IMAGE_REPO_NAME = "jenkins-docker-image-ecr-push"
+        IMAGE_REPO_NAME = "jenkins-ecr-repo"
         IMAGE_TAG = "latest"
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
     }
    
     stages {
-        stage('Cloning Git') {
-            steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],  // Changed from master to main (GitHub default)
-                    extensions: [], 
-                    userRemoteConfigs: [[
-                        credentialsId: 'gittoken', 
-                        url: 'https://github.com/awstrainersz/jenkins-docker-image-ecr-push.git'
-                    ]]
-                ])     
-            }
-        }
-
         stage('Logging into AWS ECR') {
             steps {
                 script {
@@ -33,19 +19,37 @@ pipeline {
                 }
             }
         }
-
+        
+        stage('Cloning Git') {
+            steps {
+                checkout scmGit(
+                    branches: [[name: '*/master']],
+                    userRemoteConfigs: [[
+                        credentialsId: 'toshallab',
+                        url: 'https://github.com/toshallab/demoecr2.git'
+                    ]]
+                )     
+            }
+        }
+  
         stage('Building image') {
             steps {
                 script {
-                    dockerImage = docker.build "${IMAGE_REPO_NAME}:${IMAGE_TAG}", "."
+                    sh 'docker buildx create --use --name jenkins-builder || true'
+                    sh """
+                        docker buildx build \
+                        -t ${REPOSITORY_URI}:${IMAGE_TAG} \
+                        --platform linux/amd64 \
+                        --load .
+                    """
                 }
             }
         }
-
+   
         stage('Pushing to ECR') {
-            steps {
+            steps {  
                 script {
-                    dockerImage.push("${IMAGE_TAG}")
+                    sh "docker push ${REPOSITORY_URI}:${IMAGE_TAG}"
                 }
             }
         }
