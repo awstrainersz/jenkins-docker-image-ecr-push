@@ -32,7 +32,7 @@ pipeline {
                     sh 'docker buildx create --use --name jenkins-builder || true'
                     sh """
                         docker buildx build \
-                        -t ${REPOSITORY_URI}:${IMAGE_TAG} \
+                        -tag ${REPOSITORY_URI}:${IMAGE_TAG} \
                         --platform linux/amd64 \
                         --load .
                     """
